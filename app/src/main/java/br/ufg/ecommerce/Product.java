@@ -1,6 +1,7 @@
 package br.ufg.ecommerce;
 
 public class Product {
+    private String uid;
     private String name;
     private String description;
     private double price;
@@ -54,5 +55,13 @@ public class Product {
 
     public void setContactTel(String contactTel) {
         this.contactTel = contactTel;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 }
