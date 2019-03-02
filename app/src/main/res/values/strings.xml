@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Ecommerce</string>
+    <string name="register_title">Cadastre seu produto</string>
+    <string name="product_name_hint">Nome do produto</string>
+    <string name="product_description_hint">Descrição</string>
+    <string name="product_price_hint">Preço (R$)</string>
+    <string name="product_photo_hint">Foto</string>
+    <string name="contact_title">Seu contato</string>
+    <string name="contact_name">Nome</string>
+    <string name="contact_phone">Telefone</string>
+    <string name="register_button_submit">Cadastrar</string>
 </resources>

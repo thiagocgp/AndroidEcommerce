@@ -1,11 +1,10 @@
 package br.ufg.ecommerce;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -20,7 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.UUID;
 
 
-public class Register extends Activity implements View.OnClickListener {
+public class Register extends AppCompatActivity implements View.OnClickListener {
 
     static final int REQUEST_CODE = 12;
     private ImageButton btnCamera;
@@ -39,8 +38,10 @@ public class Register extends Activity implements View.OnClickListener {
 
         this.btnCamera = findViewById(R.id.btn_camera);
         this.btnCamera.setOnClickListener(this);
+
         if (this.product == null){
             this.product = new Product();
+            this.product.setUid(UUID.randomUUID().toString());
         }
 
         this.btnSubmit = findViewById(R.id.btn_submit);
@@ -49,16 +50,6 @@ public class Register extends Activity implements View.OnClickListener {
         initFirebase();
     }
 
-    @Override
-    protected void onResume(){
-        super.onResume();
-        this.img = getIntent().getByteArrayExtra("PRODUCT_IMAGE");
-        if (this.img != null){
-            imageView = findViewById(R.id.iv_photoImg);
-            Bitmap imageBitmap = BitmapFactory.decodeByteArray(this.img, 0, this.img.length);
-            imageView.setImageBitmap(imageBitmap);
-        }
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -79,17 +70,16 @@ public class Register extends Activity implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.btn_camera: {
                 Intent intent = new Intent(this, Camera.class);
-                //startActivityForResult(intent, REQUEST_CODE);
-                startActivity(intent);
-                this.finish();
+                startActivityForResult(intent, REQUEST_CODE);
                 break;
             }
             case R.id.btn_submit: {
                 getFieldsValues();
-                this.product.setUid(UUID.randomUUID().toString());
-                databaseReference.child("Product").child(this.product.getUid()).setValue(this.product);
+                databaseReference.child(this.product.getUid()).setValue(this.product);
                 Toast.makeText(this,"Produto Cadastrado!",Toast.LENGTH_LONG).show();
                 clearFields();
+                Register.this.finish();
+                break;
             }
         }
     }
@@ -133,8 +123,12 @@ public class Register extends Activity implements View.OnClickListener {
     private void initFirebase() {
         FirebaseApp.initializeApp(this);
         firebaseDatabase = firebaseDatabase.getInstance();
-        firebaseDatabase.setPersistenceEnabled(false);
         databaseReference = firebaseDatabase.getReference();
+    }
+
+    @Override
+    public void onBackPressed() {
+        this.finish();
     }
 
 }

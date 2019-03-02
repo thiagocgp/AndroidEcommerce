@@ -9,6 +9,8 @@ public class Product {
     private String contactName;
     private String contactTel;
 
+    public Product() { }
+
     public String getName() {
         return name;
     }
