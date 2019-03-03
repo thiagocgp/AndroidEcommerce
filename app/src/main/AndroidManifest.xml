@@ -17,20 +17,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Register"
-            android:configChanges="orientation|screenLayout">
-        </activity>
+        <activity
+            android:name=".Register"
+            android:configChanges="orientation|screenLayout"></activity>
         <activity
             android:name=".Camera"
             android:configChanges="orientation|screenLayout"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"></activity>
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
         <activity android:name=".MainActivity" />
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ProductDetails"></activity>
     </application>
 
 </manifest>
