@@ -1,12 +1,15 @@
 package br.ufg.ecommerce;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 
 import com.camerakit.CameraKitView;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 
@@ -60,16 +63,24 @@ public class Camera extends Activity implements View.OnClickListener {
         this.cameraKitView.captureImage(new CameraKitView.ImageCallback() {
             @Override
             public void onImage(CameraKitView cameraKitView, byte[] capturedImage) {
-                String filePath = getApplicationContext().getFilesDir().getPath().toString() + "/photo.bmp";
+
+                Bitmap bitmapImg = BitmapFactory.decodeByteArray(capturedImage, 0, capturedImage.length);
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bitmapImg.compress(Bitmap.CompressFormat.JPEG, 90, stream);
+                byte[] img = stream.toByteArray();
+
+                String filePath = getApplicationContext().getFilesDir().getPath() + "/photo.jpg";
                 File savedPhoto = new File(filePath);
+
                 try {
                     FileOutputStream outputStream = new FileOutputStream(savedPhoto);
-                    outputStream.write(capturedImage);
+                    outputStream.write(img);
                     outputStream.close();
                 }
                 catch (java.io.IOException e) {
                     e.printStackTrace();
                 }
+
                 Camera.this.finish();
             }
         });

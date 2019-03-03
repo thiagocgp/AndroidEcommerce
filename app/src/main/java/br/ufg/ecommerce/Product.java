@@ -1,16 +1,10 @@
 package br.ufg.ecommerce;
 
-import android.graphics.Bitmap;
-
-import java.util.ArrayList;
-import java.util.List;
-
 public class Product {
     private String uid;
     private String name;
     private String description;
     private double price;
-    private ArrayList<Integer> image;
     private String contactName;
     private String contactTel;
 
@@ -38,14 +32,6 @@ public class Product {
 
     public void setPrice(double price) {
         this.price = price;
-    }
-
-    public ArrayList<Integer> getImage() {
-        return image;
-    }
-
-    public void setImage(ArrayList<Integer> image) {
-        this.image = image;
     }
 
     public String getContactName() {
