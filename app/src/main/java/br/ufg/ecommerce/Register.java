@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +17,16 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -36,6 +47,8 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        this.imageView = findViewById(R.id.iv_photoImg);
+
         this.btnCamera = findViewById(R.id.btn_camera);
         this.btnCamera.setOnClickListener(this);
 
@@ -48,20 +61,34 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         this.btnSubmit.setOnClickListener(this);
 
         initFirebase();
+
+        String filePath = getApplicationContext().getFilesDir().getPath() + "/photo.bmp";
+        File file = new File(filePath);
+        file.delete();
     }
 
-
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE) {
-            if(resultCode == 0){
-                imageView = findViewById(R.id.iv_photoImg);
-                byte[] capturedImage = data.getByteArrayExtra("PRODUCT_IMAGE");
-                if (capturedImage != null){
-                    Bitmap imageBitmap = BitmapFactory.decodeByteArray(capturedImage, 0, capturedImage.length);
-                    imageView.setImageBitmap(imageBitmap);
-                }
+    protected void onResume(){
+        super.onResume();
+        String filePath = getApplicationContext().getFilesDir().getPath() + "/photo.bmp";
+        File file = new File(filePath);
+        try {
+            FileInputStream fileInputStream = new FileInputStream(file);
+            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+            int nRead;
+            byte aux[] = new byte[(int)file.length()];
+
+            while ((nRead = fileInputStream.read(aux, 0, aux.length)) != -1) {
+                buffer.write(aux, 0, nRead);
             }
+            this.img = buffer.toByteArray();
+            Bitmap bitmapImg = BitmapFactory.decodeByteArray(this.img, 0, this.img.length);
+            this.imageView.setImageBitmap(bitmapImg);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -70,7 +97,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         switch (v.getId()) {
             case R.id.btn_camera: {
                 Intent intent = new Intent(this, Camera.class);
-                startActivityForResult(intent, REQUEST_CODE);
+                startActivity(intent);
                 break;
             }
             case R.id.btn_submit: {
@@ -78,6 +105,9 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                 databaseReference.child(this.product.getUid()).setValue(this.product);
                 Toast.makeText(this,"Produto Cadastrado!",Toast.LENGTH_LONG).show();
                 clearFields();
+                String filePath = getApplicationContext().getFilesDir().getPath() + "/photo.bmp";
+                File file = new File(filePath);
+                file.delete();
                 Register.this.finish();
                 break;
             }
@@ -100,7 +130,11 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         textView = findViewById(R.id.txt_contactPhone);
         this.product.setContactTel(textView.getText().toString());
 
-        this.product.setImage(this.img);
+        ArrayList<Integer> imgList = new ArrayList<>();
+        for (int i = 0; i < this.img.length; i++){
+            imgList.add((int)this.img[i]);
+        }
+        this.product.setImage(imgList);
     }
 
     private void clearFields(){
@@ -128,7 +162,11 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
     @Override
     public void onBackPressed() {
+        String filePath = getApplicationContext().getFilesDir().getPath() + "/photo.bmp";
+        File file = new File(filePath);
+        file.delete();
         this.finish();
     }
+
 
 }
