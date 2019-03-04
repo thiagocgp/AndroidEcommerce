@@ -97,9 +97,12 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                 break;
             }
             case R.id.btn_submit: {
-                getFieldsValues();
+                if (!getFieldsValues()){
+                    Toast.makeText(this,"Preecha todos os campos",Toast.LENGTH_LONG).show();
+                    break;
+                }
                 databaseReference.child(this.product.getUid()).setValue(this.product);
-                Toast.makeText(this,"Produto Cadastrado!",Toast.LENGTH_LONG).show();
+                Toast.makeText(this,"Produto Cadastrado",Toast.LENGTH_LONG).show();
                 clearFields();
                 String filePath = getApplicationContext().getFilesDir().getPath() + "/photo.bmp";
                 File file = new File(filePath);
@@ -110,23 +113,48 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         }
     }
 
-    private void getFieldsValues(){
+    private boolean getFieldsValues(){
         TextView textView = findViewById(R.id.txt_productName);
+        String value = textView.getText().toString();
+        if (value == null || value.equals("")){
+            return false;
+        }
         this.product.setName(textView.getText().toString());
 
         textView = findViewById(R.id.txt_productDescription);
+        value = textView.getText().toString();
+        if (value == null || value.equals("")){
+            return false;
+        }
         this.product.setDescription(textView.getText().toString());
 
         textView = findViewById(R.id.txt_productPrice);
+        value = textView.getText().toString();
+        if (value == null || value.equals("")){
+            return false;
+        }
         this.product.setPrice(Double.parseDouble(textView.getText().toString()));
 
         textView = findViewById(R.id.txt_contactName);
+        value = textView.getText().toString();
+        if (value == null || value.equals("")){
+            return false;
+        }
         this.product.setContactName(textView.getText().toString());
 
         textView = findViewById(R.id.txt_contactPhone);
+        value = textView.getText().toString();
+        if (value == null || value.equals("")){
+            return false;
+        }
         this.product.setContactTel(textView.getText().toString());
 
+        if(this.img == null){
+            return false;
+        }
         uploadImage();
+
+        return true;
     }
 
     private void uploadImage(){

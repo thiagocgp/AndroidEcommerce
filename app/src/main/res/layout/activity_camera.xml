@@ -11,11 +11,12 @@
         android:layout_height="match_parent"
         android:adjustViewBounds="true"
         android:keepScreenOn="true"
-        app:camera_flash="off"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
         app:camera_facing="back"
+        app:camera_flash="off"
         app:camera_focus="continuous"
         app:camera_permissions="camera">
-
     </com.camerakit.CameraKitView>
 
     <ImageButton

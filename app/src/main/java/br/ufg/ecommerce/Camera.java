@@ -66,7 +66,7 @@ public class Camera extends Activity implements View.OnClickListener {
 
                 Bitmap bitmapImg = BitmapFactory.decodeByteArray(capturedImage, 0, capturedImage.length);
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bitmapImg.compress(Bitmap.CompressFormat.JPEG, 90, stream);
+                bitmapImg.compress(Bitmap.CompressFormat.JPEG, 60, stream);
                 byte[] img = stream.toByteArray();
 
                 String filePath = getApplicationContext().getFilesDir().getPath() + "/photo.jpg";
